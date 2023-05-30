@@ -10,7 +10,12 @@ CREATE TABLE 'users' (
     'type' char(60) NOT NULL,
     'hash' char(60) NOT NULL,
     PRIMARY KEY('user_id')
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
+UNLOCK TABLES;
 
 CREATE TABLE 'books' (
     'book_id' int(11) NOT NULL AUTO_INCREMENT,
@@ -21,7 +26,12 @@ CREATE TABLE 'books' (
     FOREIGN KEY ('user_id') REFERENCES 'users'('user_id'),
     PRIMARY KEY('book_id')
 
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+LOCK TABLES `books` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
+UNLOCK TABLES;
 
 CREATE TABLE 'requests'(
     'request_id' int(11) NOT NULL AUTO_INCREMENT,
@@ -32,4 +42,8 @@ CREATE TABLE 'requests'(
     FOREIGN KEY ('book_id') REFERENCES 'books'('book_id'),
     FOREIGN KEY ('user_id') REFERENCES 'users'('user_id'),
     PRIMARY KEY('request_id')
-);
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+LOCK TABLES `requests` WRITE;
+/*!40000 ALTER TABLE `tasks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
+UNLOCK TABLES;

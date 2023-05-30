@@ -1,0 +1,11 @@
+body{
+    align-content: center;
+    padding: auto;
+    margin:auto;
+}
+.btn{
+    width:50rem;
+    margin:auto;
+    align-items: center;
+    padding:auto;
+}
