@@ -1,1 +1,4 @@
-It is a library management System
+# library management System
+## npm i
+## nodemon app.js
+## open localhost:3000 on your browser
