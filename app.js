@@ -29,8 +29,8 @@ const adminBooks=require("./routes/adminBooks");
 const { request } = require("http");
 
 //static files serving
-app.use("/css", express.static(path.join(rootDir, "css")));
-app.use("/js", express.static(__dirname+"/public/js"));
+// app.use("/css", express.static(path.join(rootDir,"public" ,"css")));
+app.use(express.static(__dirname+"/public"));
 // app.use(
 // 	"/css",
 // 	express.static(path.join(rootDir, "node_modules", "bootstrap", "dist", "css"))
