@@ -11,15 +11,55 @@ const cors = require("cors");
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
+const jwt=require("jsonwebtoken")
+
 
 router.get("/login", (req, res) => {
-	res.sendFile(path.join(rootDir, "src", "views", "login.html"));
+	res.sendFile(path.join(rootDir,"views", "login.html"));
 });
 router.post("/login", (req, res) => {
-	// console.log(req.body);
-	let username = req.body.username;
-	let password = req.body.password;
-	db.query(`SELECT * FROM users WHERE USERNAME = ${db.escape(username)};`,
-    );
+    const{username,password}=req.body;
+    if (!username || !password )
+		return res.json({
+			status: "error",
+			error: "Please enter your details completely",
+		});
+    else{
+        db.query(
+			"select * from users where USERNAME = ?",
+			[username],
+			async (err, result) => {
+				if(err)throw err;
+				let hash = await bcrypt.hash(password, result[0].SALT);
+				if(!result[0]){
+					return res.json({
+						status: "error",
+						error: "Username doesn't exist",
+					})
+				}
+				else if(hash!==result[0].hash){
+					return res.json({
+						status: "error",
+						error: "Password didn't match",
+					})
+				}
+				else{
+					const token =jwt.sign({id:result[0].user_id},process.env.JWT_SECRET,{
+						expiresIn:process.env.JWT_EXPIRES,
+						httpOnly:true
+					})
+					const cookieOptions={
+						expiresIn:new Date(Date.now()+process.env.COOKIE_EXPIRES*3600*1000),
+						httpOnly:true
+					}
+					res.cookie("userRegistered",token,cookieOptions);
+					 if (result[0].type === "client") {
+						res.redirect(`/profile/${username}`);
+					} else {
+						res.redirect("/books/admin");
+					}				}
+			}
+		)
+    }
 });
 module.exports = router;

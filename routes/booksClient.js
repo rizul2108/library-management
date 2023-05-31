@@ -3,7 +3,7 @@ const router=express.Router();
 const path=require('path');
 const rootDir=require("../utils/path")
 
-router.get("/",(req,res)=>{
-    res.sendFile( path.join(rootDir,'views','home.html'))
+router.get("/books/client",(req,res)=>{
+    res.render( path.join(rootDir,'views','booksClient.ejs'))
 })
 module.exports=router;

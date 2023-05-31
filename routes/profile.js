@@ -4,6 +4,6 @@ const path=require('path');
 const rootDir=require("../utils/path")
 
 router.get("/profile",(req,res)=>{
-    res.render( path.join(rootDir,'src','views','clientProfile.ejs'))
+    res.render( path.join(rootDir,'views','clientProfile.ejs'))
 })
 module.exports=router;
