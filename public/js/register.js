@@ -6,22 +6,24 @@ form.addEventListener("submit",()=>{
         type:type.value,
         passwordC:passwordC.value
     }
-console.log(register);
-    fetch("/api/register",{
+
+async function gh(){
+    const response = await fetch("/signup",{
         method:"POST",
         body:JSON.stringify(register),
         headers:{
             "Content-Type":"application/json"
         }})
-        .then(res=>res.json())
-        .then(
-            data=>{
-                if(data.status=="error"){
-                    error.style.display="block"
-                    success.style.display="none"
-                    error.innerText=data.error
-                }
-            }
-        )
+        const data=await response.json()
+       if(data.status=="error"){
+            const error=document.getElementById("error")
+            const success=document.getElementById("success")
+            error.style.display="block"
+            success.style.display="none"
+            error.innerText=data.error
+        }
+}
+// module.exports=register.username;
+
+gh()})
     
-})

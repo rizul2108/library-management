@@ -8,7 +8,12 @@ const db = require("./database.js");
 const path = require("path");
 const rootDir = require("./utils/path");
 const cookie=require("cookie-parser")
-db.connect();
+db.connect((err)=>{
+	if(err){
+		console.log(err);
+	}
+	console.log("connected")
+});
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));

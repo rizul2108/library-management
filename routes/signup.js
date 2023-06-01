@@ -8,7 +8,6 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("../database");
-
 const register = async (req, res) => {};
 
 router.use(bodyParser.urlencoded({ extended: false }));
@@ -43,8 +42,7 @@ router.post("/signup", async (req, res) => {
 		});
 	} else {
 		db.query(
-			"select * from users where USERNAME = ?",
-			[username],
+			`select * from users where username = ${db.escape(username)}`,
 			async (err, result) => {
 				if (err) throw err;
 				if (result[0]) {
@@ -54,6 +52,7 @@ router.post("/signup", async (req, res) => {
 					});
 				} else {
 					var pass = await hashPassword(password);
+					console.log(pass);
 					db.query(
 						`INSERT INTO users (username, full_name, salt, hash, type) VALUES(${db.escape(
 							username
