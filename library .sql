@@ -28,14 +28,5 @@ LOCK TABLES `books` WRITE;
 /*!40000 ALTER TABLE `tasks` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- CREATE TABLE `requests` (
---     `request_id` int(11) NOT NULL AUTO_INCREMENT,
---     `user_id` int(11) NOT NULL,
---     `book_id` int(11) NOT NULL,
---     `type` varchar(3) NOT NULL,
---     `request_date` DATE NOT NULL,
---     FOREIGN KEY (`book_id`) REFERENCES `books`(`book_id`),
---     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
---     PRIMARY KEY(`request_id`)
--- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 

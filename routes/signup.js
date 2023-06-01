@@ -48,11 +48,10 @@ router.post("/signup", async (req, res) => {
 				if (result[0]) {
 					return res.json({
 						status: "error",
-						error: "Username already exits",
+						error: "Username already exists",
 					});
 				} else {
 					var pass = await hashPassword(password);
-					console.log(pass);
 					db.query(
 						`INSERT INTO users (username, full_name, salt, hash, type) VALUES(${db.escape(
 							username

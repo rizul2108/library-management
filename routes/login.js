@@ -26,18 +26,19 @@ router.post("/login", (req, res) => {
 		});
     else{
         db.query(
-			"select * from users where USERNAME = ?",
-			[username],
+			`select * from users where USERNAME = ${db.escape(username)}`,
 			async (err, result) => {
 				if(err)throw err;
-				let hash = await bcrypt.hash(password, result[0].SALT);
 				if(!result[0]){
 					return res.json({
 						status: "error",
 						error: "Username doesn't exist",
-					})
+					});
 				}
-				else if(hash!==result[0].hash){
+				let hash = await bcrypt.hash(password, result[0].salt);
+
+				 if(hash!==result[0].hash){
+					console.log("passwords don't match")
 					return res.json({
 						status: "error",
 						error: "Password didn't match",
