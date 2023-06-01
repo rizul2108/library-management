@@ -17,11 +17,11 @@
           </button>
         </div>
       </nav>
-      
+      <button id="f" onclick={hi}>hi</button>
       <div class="container my-5">
         <div class="card" style="width: 40rem;">
           <div class="card-body">
-            <form action="/login" method="POST">
+            <form action="/login" id="form" onsubmit="return false;">
               <h4>Enter Your Details Here</h4>
               <div class="mb-3">
                 <label for="username" class="form-label">Username</label>
@@ -31,8 +31,8 @@
                 <label for="password" class="form-label">Password</label>
                 <input type="password" class="form-control" id="password" name="password">
               </div>
-              <div class="alert alert-danger" role="alert" id="error" style="display: none;"></div>				  
-              <div class="alert alert-success" role="alert" id="success" style="display: none;"></div>		
+              <div class="alert alert-danger" role="alert" id="err" style="display: none;"></div>				  
+              <div class="alert alert-success" role="alert" id="suc" style="display: none;"></div>		
               <button type="submit" class="btn btn-primary">Log in</button>
             </form>
           </div>

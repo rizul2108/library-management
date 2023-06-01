@@ -1,4 +1,5 @@
 form.addEventListener("submit",()=>{
+
     const register={
         username:username.value,
         password:password.value,
@@ -14,8 +15,11 @@ async function gh(){
         headers:{
             "Content-Type":"application/json"
         }})
+        console.log(response)
         const data=await response.json()
+        console.log(data)
        if(data.status=="error"){
+        console.log("h")
             const error=document.getElementById("error")
             const success=document.getElementById("success")
             error.style.display="block"

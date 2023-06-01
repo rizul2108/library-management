@@ -8,7 +8,6 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("../database");
-const register = async (req, res) => {};
 
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
@@ -61,7 +60,7 @@ router.post("/signup", async (req, res) => {
 					),(error,results)=>{
 						if(error)throw error;
 						else if (type === "client") {
-							res.redirect(`/profile/${username}`);
+							res.redirect(`/profile}`);
 						} else {
 							res.redirect("/books/admin");
 						}
