@@ -17,9 +17,7 @@ async function gh(){
         }})
         console.log(response)
         const data=await response.json()
-        console.log(data)
        if(data.status=="error"){
-        console.log("h")
             const error=document.getElementById("error")
             const success=document.getElementById("success")
             error.style.display="block"

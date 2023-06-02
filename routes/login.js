@@ -8,17 +8,15 @@ const crypto = require("crypto");
 const db = require("../database");
 require("dotenv").config();
 const cors = require("cors");
-
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
 const jwt = require("jsonwebtoken");
 
-router.get("/login", async (req, res) => {
+router.get("/login", (req, res) => {
 	res.sendFile(path.join(rootDir, "views", "login.html"));
 });
-router.post("/login", (req, res) => {
+router.post("/login", async (req, res) => {
 	const { username, password } = req.body;
-	console.log(username);
 	if (!username || !password)
 		return res.json({
 			status: "error",
@@ -28,6 +26,7 @@ router.post("/login", (req, res) => {
 		db.query(
 			`select * from users where USERNAME = ${db.escape(username)}`,
 			async (err, result) => {
+
 				if (err) throw err;
 				if (!result[0]) {
 					return res.json({
@@ -36,7 +35,6 @@ router.post("/login", (req, res) => {
 					});
 				} else {
 					let hash = await bcrypt.hash(password, result[0].salt);
-
 					if (hash !== result[0].hash) {
 						console.log("passwords don't match");
 						return res.json({
@@ -45,24 +43,18 @@ router.post("/login", (req, res) => {
 						});
 					} else {
 						const token = jwt.sign(
-							{ id: result[0].user_id },
+							{ username:result[0].username },
 							process.env.JWT_SECRET,
 							{
 								expiresIn: process.env.JWT_EXPIRES,
-								httpOnly: true,
 							}
 						);
-						const cookieOptions = {
-							expiresIn: new Date(
-								Date.now() + process.env.COOKIE_EXPIRES * 3600 * 1000
-							),
-							httpOnly: true,
-						};
-						res.cookie("userRegistered", token, cookieOptions);
-						if (result[0].type === "client") {
-							res.redirect(`/profile/${username}`);
+						
+						if (result[0].type === "Client") {
+							console.log("hi")
+							res.redirect(`/profile?username=${result[0].username}`);
 						} else {
-							res.redirect("/books/admin");
+							res.redirect("/admin/books");
 						}
 					}
 				}
@@ -70,4 +62,4 @@ router.post("/login", (req, res) => {
 		);
 	}
 });
-module.exports = router;
+module.exports =router;

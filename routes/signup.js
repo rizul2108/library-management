@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const db = require("../database");
-
+const jwt = require("jsonwebtoken");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
 
@@ -51,20 +51,28 @@ router.post("/signup", async (req, res) => {
 					});
 				} else {
 					var pass = await hashPassword(password);
+					const token = jwt.sign(
+						{ username: username },
+						process.env.JWT_SECRET,
+						{
+							expiresIn: process.env.JWT_EXPIRES,
+						}
+					);
 					db.query(
-						`INSERT INTO users (username, full_name, salt, hash, type) VALUES(${db.escape(
+						`INSERT INTO users (username, full_name, salt, hash, type,token) VALUES(${db.escape(
 							username
 						)},${db.escape(fullname)},'${pass.salt}', '${
 							pass.hash
-						}', ${db.escape(type)});`
-					),(error,results)=>{
-						if(error)throw error;
-						else if (type === "client") {
-							res.redirect(`/profile}`);
-						} else {
-							res.redirect("/books/admin");
-						}
-					};
+						}', ${db.escape(type)},${db.escape(token)});`
+					),
+						(error, results) => {
+							if (error) throw error;
+							if (type === "Client") {
+								results.redirect(`/profile?username=${result[0].username}`);
+							} else {
+								results.redirect("/books/admin");
+							}
+						};
 				}
 			}
 		);

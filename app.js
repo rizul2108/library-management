@@ -7,7 +7,9 @@ const crypto = require("crypto");
 const db = require("./database.js");
 const path = require("path");
 const rootDir = require("./utils/path");
-const cookie=require("cookie-parser")
+const cookie=require("cookie-parser");
+
+  
 db.connect((err)=>{
 	if(err){
 		console.log(err);
@@ -23,6 +25,7 @@ app.set("view engine", "ejs");
 app.set("views", "./views");
 app.use(cookie());
 app.use(express.json());
+
 
 //importing routes
 const homeRouter = require("./routes/home");
@@ -46,7 +49,7 @@ app.use(homeRouter);
 app.use(loginroute);
 app.use(signuproute);
 app.use(profileRoute);
-app.use(clientBooks);
+// app.use(clientBooks);
 app.use(adminBooks);
 
 app.use((req, res) => {
