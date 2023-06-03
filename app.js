@@ -30,6 +30,7 @@ app.use(express.json());
 //importing routes
 const homeRouter = require("./routes/home");
 const loginroute = require("./routes/login");
+const welcomRoute = require("./routes/welcome");
 const signuproute = require("./routes/signup");
 const profileRoute = require("./routes/profile");
 const clientBooks=require("./routes/booksClient");
@@ -46,10 +47,11 @@ app.use(express.static(__dirname+"/public"));
 
 //routes
 app.use(homeRouter);
+app.use(welcomRoute);
 app.use(loginroute);
 app.use(signuproute);
 app.use(profileRoute);
-// app.use(clientBooks);
+app.use(clientBooks);
 app.use(adminBooks);
 
 app.use((req, res) => {

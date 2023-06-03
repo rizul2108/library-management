@@ -28,17 +28,11 @@ async function hashPassword(password) {
 }
 
 router.post("/signup", async (req, res) => {
-	const { username, password, fullname, type, passwordC } = req.body;
-	if (!username || !password || !passwordC || !fullname || !type)
-		return res.json({
-			status: "error",
-			error: "Please enter your details completely",
-		});
+	const { username, password, fullname, passwordC } = req.body;
+	if (!username || !password || !passwordC || !fullname)
+		res.redirect(`/signup`);
 	else if (password !== passwordC) {
-		return res.json({
-			status: "error",
-			error: "Passwords didn't match",
-		});
+		res.redirect(`/signup`);
 	} else {
 		db.query(
 			`select * from users where username = ${db.escape(username)}`,
@@ -59,20 +53,20 @@ router.post("/signup", async (req, res) => {
 						}
 					);
 					db.query(
-						`INSERT INTO users (username, full_name, salt, hash, type,token) VALUES(${db.escape(
+						`INSERT INTO users (username, full_name, salt, hash, type, token) VALUES (${db.escape(
 							username
-						)},${db.escape(fullname)},'${pass.salt}', '${
+						)}, ${db.escape(fullname)}, '${pass.salt}', '${
 							pass.hash
-						}', ${db.escape(type)},${db.escape(token)});`
-					),
+						}', 'client', ${db.escape(token)})`,
 						(error, results) => {
-							if (error) throw error;
-							if (type === "Client") {
-								results.redirect(`/profile?username=${result[0].username}`);
+							if (error) {
+								console.log(error);
 							} else {
-								results.redirect("/books/admin");
+								console.log("redirected");
+								res.redirect(`/profile?username=${username}`);
 							}
-						};
+						}
+					);
 				}
 			}
 		);

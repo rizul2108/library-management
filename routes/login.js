@@ -17,49 +17,32 @@ router.get("/login", (req, res) => {
 });
 router.post("/login", async (req, res) => {
 	const { username, password } = req.body;
-	if (!username || !password)
-		return res.json({
-			status: "error",
-			error: "Please enter your details completely",
-		});
+	if (!username || !password) res.redirect("/login");
 	else {
 		db.query(
 			`select * from users where USERNAME = ${db.escape(username)}`,
 			async (err, result) => {
-
 				if (err) throw err;
 				if (!result[0]) {
-					return res.json({
-						status: "error",
-						error: "Username doesn't exist",
-					});
+					res.redirect("/login");
 				} else {
 					let hash = await bcrypt.hash(password, result[0].salt);
 					if (hash !== result[0].hash) {
 						console.log("passwords don't match");
-						return res.json({
-							status: "error",
-							error: "Password didn't match",
-						});
+						res.redirect("/login");
 					} else {
 						const token = jwt.sign(
-							{ username:result[0].username },
+							{ username: result[0].username },
 							process.env.JWT_SECRET,
 							{
 								expiresIn: process.env.JWT_EXPIRES,
 							}
 						);
-						
-						if (result[0].type === "Client") {
-							console.log("hi")
-							res.redirect(`/profile?username=${result[0].username}`);
-						} else {
-							res.redirect("/admin/books");
-						}
+						res.redirect(`/profile?username=${result[0].username}`);
 					}
 				}
 			}
 		);
 	}
 });
-module.exports =router;
+module.exports = router;
