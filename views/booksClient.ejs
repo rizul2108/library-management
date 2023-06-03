@@ -29,7 +29,10 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<button class="btn btn-outline-primary" type="submit">Log Out</button>
+				<form action="/logout" method="GET">
+					<input type="hidden" name="username" value="<%= username %>" />
+					<button type="submit" class="btn-primary btn ">Log Out</button>
+				</form>
 			</div>
 		</nav>
 		<div class="card m-5">

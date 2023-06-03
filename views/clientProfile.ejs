@@ -37,7 +37,10 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<button class="btn btn-outline-primary" type="submit">Log Out</button>
+				<form action="/logout" method="GET">
+					<input type="hidden" name="username" value="<%= username %>" />
+					<button type="submit" class="btn-primary btn ">Log Out</button>
+				</form>
 			</div>
 		</nav>
 		<h1 class="m-5">
@@ -47,7 +50,7 @@
 		<div class="card m-5">
 			<div class="card-header">
 				<div class="row">
-					<div class="col"><h5>Books owned/ requested by You</h5></div>
+					<div class="col"><h3>Books owned/ requested by You</h3></div>
 					<div class="col"></div>
 				</div>
 			</div>

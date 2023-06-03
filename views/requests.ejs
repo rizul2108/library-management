@@ -29,8 +29,10 @@
 					<span class="navbar-toggler-icon"></span>
 				</button>
 
-				<button class="btn btn-outline-primary" type="submit">Log Out</button>
-			</div>
+        <form action="/logout" method="GET">
+					<input type="hidden" name="username" value="<%= username %>" />
+					<button type="submit" class="btn-primary btn ">Log Out</button>
+				</form>			</div>
 		</nav>
 		<div class="container">
 			<h1 class="text-center mt-3 mb-3"><%= title %></h1>

@@ -29,6 +29,7 @@ app.use(express.json());
 
 //importing routes
 const homeRouter = require("./routes/home");
+const logout = require("./routes/logout");
 const adminMakeRoute = require("./routes/makeAdmin");
 const loginroute = require("./routes/login");
 const welcomRoute = require("./routes/welcome");
@@ -40,12 +41,8 @@ const requestsRoute=require("./routes/requests");
 const { request } = require("http");
 
 //static files serving
-// app.use("/css", express.static(path.join(rootDir,"public" ,"css")));
 app.use(express.static(__dirname+"/public"));
-// app.use(
-// 	"/css",
-// 	express.static(path.join(rootDir, "node_modules", "bootstrap", "dist", "css"))
-// );
+
 
 //routes
 app.use(homeRouter);
@@ -55,6 +52,7 @@ app.use(loginroute);
 app.use(signuproute);
 app.use(profileRoute);
 app.use(clientBooks);
+app.use(logout);
 app.use(adminBooks);
 app.use(requestsRoute);
 
