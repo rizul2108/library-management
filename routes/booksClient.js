@@ -57,15 +57,12 @@ router.post("/issueBook", (req, res) => {
 				res.sendStatus(500);
 			} else {
 				if (result.affectedRows > 0) {
-					db.query(
-						`update books set quantity=quantity-1 where book_id=${bookID}`
-					);
 					res.redirect(`/client/books?username=${username}`); // Redirect to the main page after successful deletion
 				} else {
-					res.sendStatus(404); // Record not found or invalid quantity
+					res.sendStatus(404); 
 				}
 			}
 		});
-	});
-});
+		});});
+
 module.exports = router;

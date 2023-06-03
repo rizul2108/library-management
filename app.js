@@ -35,6 +35,7 @@ const signuproute = require("./routes/signup");
 const profileRoute = require("./routes/profile");
 const clientBooks=require("./routes/booksClient");
 const adminBooks=require("./routes/adminBooks");
+const requestsRoute=require("./routes/requests");
 const { request } = require("http");
 
 //static files serving
@@ -53,6 +54,7 @@ app.use(signuproute);
 app.use(profileRoute);
 app.use(clientBooks);
 app.use(adminBooks);
+app.use(requestsRoute);
 
 app.use((req, res) => {
 	res.status(404).sendFile(path.join(rootDir, "views", "404.html"));
