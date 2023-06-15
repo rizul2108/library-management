@@ -9,8 +9,8 @@ router.get("/client/books", (req, res) => {
 	const username = req.query.username;
 	console.log(username);
 	if (!username) {
-		res.status(404).sendFile(path.join(rootDir, "views", "404.html"));
-	} else {
+			res.redirect("/signup");
+		} else {
 		db.query(
 			`SELECT * FROM users WHERE username = ${db.escape(username)}`,
 			async (error, results) => {
@@ -21,7 +21,7 @@ router.get("/client/books", (req, res) => {
 
 				if (!results[0]) {
 					console.log("0");
-					res.redirect("/");
+					res.redirect("/signup");
 				}
 				const secretKey = process.env.JWT_SECRET;
 				try {
@@ -37,7 +37,7 @@ router.get("/client/books", (req, res) => {
 							});
 						});
 					} else {
-						res.redirect("/");
+						res.redirect("/signup");
 					}
 				} catch (err) {
 					console.log(err);

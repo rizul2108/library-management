@@ -13,7 +13,40 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
 
 router.get("/makeAdmin", (req, res) => {
-	res.sendFile(path.join(rootDir, "views", "makeAdmin.html"));
+	const username = req.query.username;
+	console.log(username);
+	if (!username) {
+		res.redirect("/signup");
+	} else {
+		db.query(
+			`SELECT * FROM users WHERE username = ${db.escape(username)}`,
+			async (error, results) => {
+				if (error) {
+					console.log(error);
+					return;
+				}
+				if (!results[0]) {
+					console.log("0");
+					res.redirect("/signup");
+				}
+				const secretKey = process.env.JWT_SECRET;
+				try {
+					if (results[0].type !== "admin") {
+						res.redirect("/signup");
+					}
+					const decode = jwt.verify(results[0].token, secretKey);
+					const JWTusername = decode.username;
+					if (username === JWTusername) {
+						res.sendFile(path.join(rootDir, "views", "makeAdmin.html"));
+					} else {
+						res.redirect("/signup");
+					}
+				} catch (err) {
+					console.log(err);
+				}
+			}
+		);
+	}
 });
 
 async function hashPassword(password) {

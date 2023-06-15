@@ -18,7 +18,7 @@ router.get("/profile", (req, res) => {
 					return;
 				}
 				if (!results[0]) {
-					res.redirect("/");
+					res.redirect("/signup");
 				}
 				const secretKey = process.env.JWT_SECRET;
 				try {
@@ -35,7 +35,7 @@ router.get("/profile", (req, res) => {
 							});
 						});
 					} else {
-						res.redirect("/");
+						res.redirect("/signup");
 					}
 				} catch (err) {
 					console.log(err);

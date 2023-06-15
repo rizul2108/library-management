@@ -35,6 +35,7 @@ const loginroute = require("./routes/login");
 const welcomRoute = require("./routes/welcome");
 const signuproute = require("./routes/signup");
 const profileRoute = require("./routes/profile");
+const adminLoginRoute = require("./routes/adminLogin");
 const clientBooks=require("./routes/booksClient");
 const adminBooks=require("./routes/adminBooks");
 const requestsRoute=require("./routes/requests");
@@ -47,6 +48,7 @@ app.use(express.static(__dirname+"/public"));
 //routes
 app.use(homeRouter);
 app.use(adminMakeRoute);
+app.use(adminLoginRoute);
 app.use(welcomRoute);
 app.use(loginroute);
 app.use(signuproute);

@@ -12,25 +12,29 @@ router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
 const jwt = require("jsonwebtoken");
 
-router.get("/login", (req, res) => {
-	res.sendFile(path.join(rootDir, "views", "login.html"));
+router.get("/adminLogin", (req, res) => {
+	res.sendFile(path.join(rootDir, "views", "adminLogin.html"));
 });
-router.post("/login", async (req, res) => {
+router.post("/adminLogin", async (req, res) => {
 	const { username, password } = req.body;
-	if (!username || !password) res.redirect("/login");
+	if (!username || !password) res.redirect("/adminLogin");
 	else {
 		db.query(
 			`select * from users where USERNAME = ${db.escape(username)}`,
 			async (err, result) => {
 				if (err) throw err;
 				if (!result[0]) {
-					res.redirect("/login");
+					res.redirect("/signup");
 				} else {
 					let hash = await bcrypt.hash(password, result[0].salt);
 					if (hash !== result[0].hash) {
 						console.log("passwords don't match");
-						res.redirect("/login");
-					} else {
+						res.redirect("/adminLogin");
+					} else if(result[0].type!=='admin'){
+                        console.log("You are not an admin");
+						res.redirect("/signup");
+                    }
+                    else {
 						const token = jwt.sign(
 							{ username: result[0].username },
 							process.env.JWT_SECRET,
@@ -43,8 +47,9 @@ router.post("/login", async (req, res) => {
 							if(err){
 								throw err;
 							}
+
 						})
-						res.redirect(`/profile?username=${result[0].username}`);
+						res.redirect(`/admin/books?username=${result[0].username}`);
 					}
 				}
 			}
