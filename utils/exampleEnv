@@ -1,0 +1,8 @@
+PORT=3000
+USER='your username'
+PASSWORD='yoursqlpassword'
+MYSQL_HOST='localhost'
+JWT_SECRET=any_random_secret_key
+JWT_EXPIRES=9h
+COOKIE_EXPIRES=9
+DB_NAME=library

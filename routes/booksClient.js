@@ -20,7 +20,6 @@ router.get("/client/books", (req, res) => {
 				}
 
 				if (!results[0]) {
-					console.log("0");
 					res.redirect("/signup");
 				}
 				const secretKey = process.env.JWT_SECRET;

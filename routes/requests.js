@@ -4,10 +4,10 @@ var database = require("../database");
 const path = require("path");
 const rootDir = require("../utils/path");
 const jwt = require("jsonwebtoken");
+const { request } = require("http");
 
 router.get("/admin/requests", function (req, res) {
 	const username = req.query.username;
-	console.log(username);
 	if (!username) {
 		res.redirect("/signup");
 	} else {
@@ -19,7 +19,6 @@ router.get("/admin/requests", function (req, res) {
 					return;
 				}
 				if (!results[0]) {
-					console.log("0");
 					res.redirect("/signup");
 				}
 				const secretKey = process.env.JWT_SECRET;
@@ -30,7 +29,11 @@ router.get("/admin/requests", function (req, res) {
 					const decode = jwt.verify(results[0].token, secretKey);
 					const JWTusername = decode.username;
 					if (username === JWTusername) {
-						var query = `select request_id,req_type,title,full_name from requests r join books b on r.book_id=b.book_id join users u on r.user_id=u.user_id where req_type="borrow" or req_type="return";`;
+						const query =`SELECT request_id, req_type, title, full_name, quantity
+						FROM requests r
+						JOIN books b ON r.book_id = b.book_id
+						JOIN users u ON r.user_id = u.user_id
+						WHERE (req_type = 'return') OR (req_type = 'borrow' AND quantity > 0);`;
 						database.query(query, function (error, data) {
 							if (error) {
 								throw error;
@@ -39,7 +42,7 @@ router.get("/admin/requests", function (req, res) {
 									title: "Requests List",
 									action: "list",
 									sampleData: data,
-									username:username
+									username: username,
 								});
 							}
 						});
@@ -54,9 +57,7 @@ router.get("/admin/requests", function (req, res) {
 	}
 });
 router.post("/delRequest", function (req, res) {
-	console.log(req.body);
-	const { reqID } = req.body;
-	console.log(reqID);
+	const { reqID, username } = req.body;
 	const q = `select  * from requests WHERE request_id = ${reqID}`;
 	database.query(q, (err, result) => {
 		if (err) throw err;
@@ -69,7 +70,7 @@ router.post("/delRequest", function (req, res) {
 					res.sendStatus(500);
 				} else {
 					if (result.affectedRows > 0) {
-						res.redirect(`/admin/requests`); // Redirect to the main page after successful deletion
+						res.redirect(`/admin/requests?username=${username}`); // Redirect to the main page after successful deletion
 					} else {
 						res.sendStatus(404); // Record not found or invalid quantity
 					}
@@ -83,7 +84,7 @@ router.post("/delRequest", function (req, res) {
 					res.sendStatus(500);
 				} else {
 					if (result.affectedRows > 0) {
-						res.redirect(`/admin/requests`); // Redirect to the main page after successful deletion
+						res.redirect(`/admin/requests?username=${username}`); // Redirect to the main page after successful deletion
 					} else {
 						res.sendStatus(404); // Record not found or invalid quantity
 					}
@@ -93,9 +94,7 @@ router.post("/delRequest", function (req, res) {
 	});
 });
 router.post("/acceptRequest", function (req, res) {
-	console.log(req.body);
-	const { reqID } = req.body;
-	console.log(reqID);
+	const { reqID, username } = req.body;
 	const q = `select  * from requests WHERE request_id = ${reqID}`;
 	database.query(q, (err, result) => {
 		if (err) throw err;
@@ -111,14 +110,14 @@ router.post("/acceptRequest", function (req, res) {
 						database.query(
 							`update books set quantity=quantity - 1 where book_id=${bookID}`
 						);
-						res.redirect(`/admin/requests`); // Redirect to the main page after successful deletion
+						res.redirect(`/admin/requests?username=${username}`); // Redirect to the main page after successful deletion
 					} else {
 						res.sendStatus(404); // Record not found or invalid quantity
 					}
 				}
 			});
 		} else if (result[0].req_type == "return") {
-			const query = `update requests set req_type="accepted", state="owned" WHERE request_id = ${reqID}`;
+			const query = `delete from requests where request_id=${reqID}`;
 			database.query(query, (err, result) => {
 				if (err) {
 					console.error(err);
@@ -128,7 +127,7 @@ router.post("/acceptRequest", function (req, res) {
 						database.query(
 							`update books set quantity=quantity + 1 where book_id=${bookID}`
 						);
-						res.redirect(`/admin/requests`); // Redirect to the main page after successful deletion
+						res.redirect(`/admin/requests?username=${username}`); // Redirect to the main page after successful deletion
 					} else {
 						res.sendStatus(404); // Record not found or invalid quantity
 					}

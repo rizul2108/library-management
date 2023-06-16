@@ -28,74 +28,22 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-
         	</div>
 		</nav>
 		<div class="container">
 			<h1 class="text-center mt-3 mb-3"><%= title %></h1>
-
-			<% if(action == 'add') { %>
-			<div class="card">
-				<div class="card-header">Add New Book</div>
-				<div class="card-body">
-					<form method="POST" action="/admin/add_book">
-						<div class="row">
-							<div class="col-md-6">
-								<div class="mb-3">
-									<label>Book Title</label>
-									<input
-										type="text"
-										name="title"
-										id="title"
-										class="form-control"
-									/>
-								</div>
-							</div>
-							<div class="col-md-6">
-								<div class="mb-3">
-									<label>Author</label>
-									<input
-										type="text"
-										name="author"
-										id="author"
-										class="form-control"
-									/>
-								</div>
-							</div>
-						</div>
-						<div class="row">
-							<div class="col-md-6">
-								<div class="mb-3">
-									<label>Quantity</label>
-									<input
-										type="number"
-										name="quantity"
-										id="quantity"
-										min="1"
-										class="form-control"
-									/>
-								</div>
-							</div>
-						</div>
-						<div class="mb-3">
-							<input
-								type="submit"
-								name="submit_button"
-								class="btn btn-primary"
-								value="Add"
-							/>
-						</div>
-					</form>
-				</div>
-			</div>
-
-			<% } else { %>
-
+			
 			<div class="card">
 				<div class="card-header">
 					<div class="row">
 						<div class="col"><h4>Incoming Requests</h4></div>
-					</div>
+					<form action="/admin/addBook" method="GET">
+						<input type="hidden" name="username" value="<%= username %>" />
+						<button type="submit" class="btn-primary btn">
+							Add New Book
+						</button>
+					</form>	
+				</div>
 				</div>
 				<div class="card-body">
 							<% if(sampleData.length > 0) 
@@ -118,6 +66,12 @@
                       value="<%= data.request_id %>"
                       class="form-control"
                     />
+                    <input
+                      type="hidden"
+                      name="username"
+                      value="<%= username %>"
+                      class="form-control"
+                    />
                     <button
                       class=" btn btn-primary btn-sm m-1"
                       type="submit"
@@ -132,6 +86,12 @@
 												value="<%= data.request_id %>"
 												class="form-control"
 											/>
+											<input
+											type="hidden"
+											name="username"
+											value="<%= username %>"
+											class="form-control"
+										  />
 											<button
 												class=" btn btn-primary btn-sm m-1"
 												type="submit"
@@ -142,12 +102,10 @@
 								</div>
 							</div>
 						</div>
-
 							<% }); } else { %>
 								<h1>No Data Found</h1>
 							<% } %>
 				</div>
-			<% } %>
 		</div>
 		<form action="/admin/books" method="GET">
 			<input type="hidden" name="username" value="<%= username %>" />
@@ -160,5 +118,5 @@
 			integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe"
 			crossorigin="anonymous"
 		></script>
-	</body>
+</body>
 </html>

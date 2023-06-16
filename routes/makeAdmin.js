@@ -14,7 +14,6 @@ router.use(cors());
 
 router.get("/makeAdmin", (req, res) => {
 	const username = req.query.username;
-	console.log(username);
 	if (!username) {
 		res.redirect("/signup");
 	} else {
@@ -26,7 +25,6 @@ router.get("/makeAdmin", (req, res) => {
 					return;
 				}
 				if (!results[0]) {
-					console.log("0");
 					res.redirect("/signup");
 				}
 				const secretKey = process.env.JWT_SECRET;
