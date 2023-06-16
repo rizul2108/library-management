@@ -25,7 +25,7 @@ router.get("/admin/books",function (req, res) {
 					const decode = jwt.verify(results[0].token, secretKey);
 					const JWTusername = decode.username;
 					if (username === JWTusername) {
-						var query = "SELECT * FROM books where quantity>0";
+						var query = "SELECT * FROM books";
 						database.query(query, function (error, data) {
 							if (error) {
 								throw error;
