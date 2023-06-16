@@ -36,7 +36,7 @@ router.get("/makeAdmin", (req, res) => {
 					const JWTusername = decode.username;
 					if (username === JWTusername) {
 						const message = req.query.message || "";
-						res.render(path.join(rootDir, "views", "makeAdmin.ejs"), { message });
+						res.render(path.join(rootDir, "views", "makeAdmin.ejs"), { message ,username:username});
 					} else {
 						res.redirect("/signup");
 					}
@@ -60,7 +60,7 @@ async function hashPassword(password) {
 }
 
 router.post("/makeAdmin", async (req, res) => {
-	const { username, password, fullname, passwordC } = req.body;
+	const { username, password, fullname, passwordC ,username1} = req.body;
 	if (password !== passwordC) {
 		return res.redirect("/signup?message=Passwords%20didn't%20match");
 	} else {
@@ -89,7 +89,7 @@ router.post("/makeAdmin", async (req, res) => {
 							if (error) {
 								console.log(error);
 							} else {
-								res.redirect(`/admin/books`);
+								res.redirect(`/admin/books?username=${username1}`);
 							}
 						}
 					);

@@ -22,6 +22,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "mysql2": "^3.3.3",
+    "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.10"
   },
   "devDependencies": {

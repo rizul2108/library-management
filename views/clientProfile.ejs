@@ -39,7 +39,7 @@
 				</button>
 				<form action="/logout" method="GET">
 					<input type="hidden" name="username" value="<%= username %>" />
-					<button type="submit" class="btn-primary btn ">Log Out</button>
+					<button type="submit" class="btn-primary btn">Log Out</button>
 				</form>
 			</div>
 		</nav>
@@ -70,7 +70,11 @@
 							<td><%= data.req_type %></td>
 							<%if(data.state=="requested"){ %>
 							<td>
-								<form action="/delReq" method="POST">
+								<form
+									action="/delReq"
+									method="POST"
+									class="reqMod"
+									>
 									<input
 										type="hidden"
 										name="reqID"
@@ -83,14 +87,21 @@
 										value="<%= username %>"
 										class="form-control"
 									/>
-									<button type="submit" class="btn btn-primary btn-sm">
+									<button
+										type="submit"
+										class="btn btn-primary btn-sm requestMod"
+									>
 										Withdraw Request
 									</button>
 								</form>
 							</td>
 							<%} else{%>
 							<td>
-								<form action="/retBook" method="POST">
+								<form
+									action="/retBook"
+									method="POST"
+									class="reqMod"
+								>
 									<input
 										type="hidden"
 										name="reqID"
@@ -103,7 +114,10 @@
 										value="<%= username %>"
 										class="form-control"
 									/>
-									<button type="submit" class="btn btn-primary btn-sm">
+									<button
+										type="submit"
+										class="btn btn-primary btn-sm requestMod"
+									>
 										Make request to return book
 									</button>
 								</form>
@@ -125,5 +139,24 @@
 				View Available Books
 			</button>
 		</form>
+		<script src="/sweetalert/sweetalert.min.js"></script>
+		<script>
+			console.log("i")
+			document
+				.getElementsByClassName("requestMod")
+				.addEventListener("click", function (event) {
+					event.preventDefault(); 
+					swal({
+						title: "Confirm Book Issue",
+						text: "Are you sure you want to make/delete request?",
+						icon: "warning",
+						buttons: ["Cancel", "Yes"],
+					}).then((yes) => {
+						if (yes) {
+							document.getElementById("reqMod").submit();
+						}
+					});
+				});
+		</script>
 	</body>
 </html>

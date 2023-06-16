@@ -7,7 +7,6 @@ const db = require("../database.js");
 
 router.get("/client/books", (req, res) => {
 	const username = req.query.username;
-	console.log(username);
 	if (!username) {
 			res.redirect("/signup");
 		} else {

@@ -30,18 +30,18 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<form action="/makeAdmin" method="GET">
+				<form action="/admin/books" method="GET">
 					<input type="hidden" name="username" value="<%= username %>" />
-					<button type="submit" class="btn-primary btn w-2">
-						Make New Admin
+					<button type="submit" class="btn-primary btn">
+						Go Back
 					</button>
-				</form>
+				</form>	
 			</div>
 		</nav>
 		<div class="container my-5">
 			<div class="card" style="width: 40rem">
 				<div class="card-body">
-					<form action="/makeAdmin" method="POST">
+					<form action="/makeAdmin" method="POST" id="makeAdminForm">
 						<h4>Enter New Admin's Details Here</h4>
 						<div class="mb-3">
 							<label for="fullname" class="form-label">Full Name</label>
@@ -84,14 +84,45 @@
 								required
 							/>
 						</div>
-						<button type="submit" class="btn btn-primary">Register User</button>
+						<input
+								type="hidden"
+								class="form-control"
+								id="username1"
+								name="username1"
+								value="<%= username %>"
+							/>
+						<button
+							type="submit"
+							class="btn btn-primary"
+							onclick="confirmCreateAdmin()"
+						>
+							Make New Admin
+						</button>
 					</form>
 				</div>
-				<div id="alert" style="display: block; color: red;" >
+				<div id="alert" style="display: block; color: red; margin: 2%">
 					<%= message %>
-				  </div>
+				</div>
 			</div>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+		<script>
+			function confirmCreateAdmin() {
+				event.preventDefault();
+				Swal.fire({
+					title: "Confirm New Admin",
+					text: "Are you sure you want to create a new admin?",
+					icon: "warning",
+					showCancelButton: true,
+					confirmButtonText: "Create Admin",
+					cancelButtonText: "Cancel",
+				}).then((result) => {
+					if (result.isConfirmed) {
+						document.getElementById("makeAdminForm").submit();
+					}
+				});
+			}
+		</script>
 	</body>
 </html>
