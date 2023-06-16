@@ -35,7 +35,8 @@ router.get("/makeAdmin", (req, res) => {
 					const decode = jwt.verify(results[0].token, secretKey);
 					const JWTusername = decode.username;
 					if (username === JWTusername) {
-						res.sendFile(path.join(rootDir, "views", "makeAdmin.html"));
+						const message = req.query.message || "";
+						res.render(path.join(rootDir, "views", "makeAdmin.ejs"), { message });
 					} else {
 						res.redirect("/signup");
 					}
@@ -60,20 +61,15 @@ async function hashPassword(password) {
 
 router.post("/makeAdmin", async (req, res) => {
 	const { username, password, fullname, passwordC } = req.body;
-	if (!username || !password || !passwordC || !fullname)
-		res.redirect(`/makeAdmin`);
-	else if (password !== passwordC) {
-		res.redirect(`/makeAdmin`);
+	if (password !== passwordC) {
+		return res.redirect("/signup?message=Passwords%20didn't%20match");
 	} else {
 		db.query(
 			`select * from users where username = ${db.escape(username)}`,
 			async (err, result) => {
 				if (err) throw err;
 				if (result[0]) {
-					return res.json({
-						status: "error",
-						error: "Username already exists",
-					});
+					return res.redirect("/signup?message=Username%20already%20exists");
 				} else {
 					var pass = await hashPassword(password);
 					const token = jwt.sign(
@@ -93,7 +89,6 @@ router.post("/makeAdmin", async (req, res) => {
 							if (error) {
 								console.log(error);
 							} else {
-								console.log("redirected");
 								res.redirect(`/admin/books`);
 							}
 						}

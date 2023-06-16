@@ -13,7 +13,8 @@ router.use(cors());
 const jwt = require("jsonwebtoken");
 
 router.get("/adminLogin", (req, res) => {
-	res.sendFile(path.join(rootDir, "views", "adminLogin.html"));
+	const message = req.query.message || "";
+	res.render(path.join(rootDir, "views", "adminLogin.ejs"),{message});
 });
 router.post("/adminLogin", async (req, res) => {
 	const { username, password } = req.body;
@@ -28,11 +29,10 @@ router.post("/adminLogin", async (req, res) => {
 				} else {
 					let hash = await bcrypt.hash(password, result[0].salt);
 					if (hash !== result[0].hash) {
-						console.log("passwords don't match");
-						res.redirect("/adminLogin");
+						return res.redirect("/adminLogin?message=Password%20didn't%20match");
 					} else if(result[0].type!=='admin'){
-                        console.log("You are not an admin");
-						res.redirect("/signup");
+						return res.redirect("/adminLogin?message=You%20aren't%20admin");
+						
                     }
                     else {
 						const token = jwt.sign(

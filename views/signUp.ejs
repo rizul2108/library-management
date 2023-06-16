@@ -5,6 +5,17 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+		<script>
+			const al=document.getElementById("alert")
+			const queryParams = new URLSearchParams(window.location.search);
+			const message = queryParams.get('message');
+			if (message) {
+				al.style.display="block"
+				al.innerHTML(message)
+			//   alert(message);
+			// setTimeout(,5000)
+			}
+		  </script>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.css">
 <link rel="stylesheet" href="/css/signUp.css">
 		<title>Sign Up</title>
@@ -51,8 +62,12 @@
 						<button type="submit" class="btn btn-primary">Register User</button>
 					</form>
 				</div>
-			</div>
+				<div id="alert" style="display: block; color: red;" >
+					<%= message %>
+				  </div>
+							</div>
 		</div>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+		  
 	</body>
 </html>

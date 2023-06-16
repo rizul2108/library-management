@@ -12,8 +12,10 @@ const jwt = require("jsonwebtoken");
 router.use(bodyParser.urlencoded({ extended: false }));
 router.use(cors());
 
+
 router.get("/signup", (req, res) => {
-	res.sendFile(path.join(rootDir, "views", "signUp.html"));
+	const message = req.query.message || "";
+	res.render(path.join(rootDir, "views", "signUp.ejs"),{message});
 });
 
 async function hashPassword(password) {
@@ -27,22 +29,20 @@ async function hashPassword(password) {
 	};
 }
 
+
 router.post("/signup", async (req, res) => {
+
 	const { username, password, fullname, passwordC } = req.body;
-	if (!username || !password || !passwordC || !fullname)
-		res.redirect(`/signup`);
-	else if (password !== passwordC) {
-		res.redirect(`/signup`);
-	} else {
+
+	 if (password !== passwordC) {
+		return res.redirect("/signup?message=Passwords%20didn't%20match");
+		} else {
 		db.query(
 			`select * from users where username = ${db.escape(username)}`,
 			async (err, result) => {
 				if (err) throw err;
 				if (result[0]) {
-					return res.json({
-						status: "error",
-						error: "Username already exists",
-					});
+					return res.redirect("/signup?message=Username%20already%20exists");
 				} else {
 					var pass = await hashPassword(password);
 					const token = jwt.sign(

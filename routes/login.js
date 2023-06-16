@@ -13,7 +13,8 @@ router.use(cors());
 const jwt = require("jsonwebtoken");
 
 router.get("/login", (req, res) => {
-	res.sendFile(path.join(rootDir, "views", "login.html"));
+	const message = req.query.message || "";
+	res.render(path.join(rootDir, "views", "login.ejs"), { message });
 });
 router.post("/login", async (req, res) => {
 	const { username, password } = req.body;
@@ -24,13 +25,15 @@ router.post("/login", async (req, res) => {
 			async (err, result) => {
 				if (err) throw err;
 				if (!result[0]) {
-					res.redirect("/login");
+					res.redirect("/signup");
 				} else {
 					let hash = await bcrypt.hash(password, result[0].salt);
 					if (hash !== result[0].hash) {
-						console.log("passwords don't match");
-						res.redirect("/login");
-					} else {
+						return res.redirect("/login?message=Password%20didn't%20match");
+					} else if(result[0].type!=='client'){
+						return res.redirect("/adminLogin?message=You%20aren't%20client");
+						
+                    }else {
 						const token = jwt.sign(
 							{ username: result[0].username },
 							process.env.JWT_SECRET,
@@ -38,12 +41,14 @@ router.post("/login", async (req, res) => {
 								expiresIn: process.env.JWT_EXPIRES,
 							}
 						);
-						const query = `update users set token=${db.escape(token)} WHERE username = ${db.escape(username)}`;
-						db.query(query,async(err,results)=>{
-							if(err){
+						const query = `update users set token=${db.escape(
+							token
+						)} WHERE username = ${db.escape(username)}`;
+						db.query(query, async (err, results) => {
+							if (err) {
 								throw err;
 							}
-						})
+						});
 						res.redirect(`/profile?username=${result[0].username}`);
 					}
 				}
