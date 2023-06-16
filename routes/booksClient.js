@@ -8,8 +8,8 @@ const db = require("../database.js");
 router.get("/client/books", (req, res) => {
 	const username = req.query.username;
 	if (!username) {
-			res.redirect("/signup");
-		} else {
+		res.redirect("/signup");
+	} else {
 		db.query(
 			`SELECT * FROM users WHERE username = ${db.escape(username)}`,
 			async (error, results) => {
@@ -48,19 +48,25 @@ router.post("/issueBook", (req, res) => {
 	const { bookID, username } = req.body;
 	const q = `select user_id from users where username="${username}"`;
 	db.query(q, (err, result) => {
-		const query = `INSERT INTO requests (book_id, user_id,req_type,state) VALUES(${bookID},${result[0].user_id},"borrow","requested")`;
-		db.query(query, (err, result) => {
-			if (err) {
-				console.error(err);
-				res.sendStatus(500);
-			} else {
-				if (result.affectedRows > 0) {
-					res.redirect(`/client/books?username=${username}`); // Redirect to the main page after successful deletion
-				} else {
-					res.sendStatus(404); 
-				}
+		const que = `select * from requests where user_id=${result[0].user_id} and book_id=${bookID}`;
+		db.query(que, (error, reqData) => {
+			if (!reqData[0]) {
+				const query = `INSERT INTO requests (book_id, user_id,req_type,state) VALUES(${bookID},${result[0].user_id},"borrow","requested")`;
+				db.query(query, (err, result) => {
+					if (err) {
+						console.error(err);
+						res.sendStatus(500);
+					} else {
+						if (result.affectedRows > 0) {
+							res.redirect(`/client/books?username=${username}`); // Redirect to the main page after successful deletion
+						} else {
+							res.sendStatus(404);
+						}
+					}
+				});
 			}
 		});
-		});});
+	});
+});
 
 module.exports = router;
