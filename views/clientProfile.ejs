@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<link rel="stylesheet" href="/css/clientProfile.css" />
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
 			rel="stylesheet"
@@ -12,7 +11,16 @@
 			crossorigin="anonymous"
 		/>
 		<title>Books</title>
-
+		<style>
+			.navbar {
+				background-color: #333;
+				color: #fff;
+			}
+			.navbar-brand {
+				font-size: 1.5rem;
+				font-weight: 700;
+			}
+		</style>
 		<title>Profile</title>
 	</head>
 	<script>
@@ -37,10 +45,19 @@
 				>
 					<span class="navbar-toggler-icon"></span>
 				</button>
-				<form action="/logout" method="GET">
-					<input type="hidden" name="username" value="<%= username %>" />
-					<button type="submit" class="btn-primary btn">Log Out</button>
-				</form>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+					<form action="/client/books" method="GET">
+						<input type="hidden" name="username" value="<%= username %>" />
+						<button type="submit" class="btn-primary btn mx-2">
+							View Available Books
+						</button>
+					</form>
+					<form action="/logout" method="GET">
+						<input type="hidden" name="username" value="<%= username %>" />
+						<button type="submit" class="btn-primary btn mx-2">Log Out</button>
+					</form>
+				</div>
 			</div>
 		</nav>
 		<h1 class="m-5">
@@ -50,7 +67,7 @@
 		<div class="card m-5">
 			<div class="card-header">
 				<div class="row">
-					<div class="col"><h3>Books owned/ requested by You</h3></div>
+					<div class="col"><h3>Books owned/requested by You</h3></div>
 					<div class="col"></div>
 				</div>
 			</div>
@@ -70,11 +87,7 @@
 							<td><%= data.req_type %></td>
 							<%if(data.state=="requested"){ %>
 							<td>
-								<form
-									action="/delReq"
-									method="POST"
-									class="reqMod"
-									>
+								<form action="/delReq" method="POST" class="reqMod">
 									<input
 										type="hidden"
 										name="reqID"
@@ -97,11 +110,7 @@
 							</td>
 							<%} else{%>
 							<td>
-								<form
-									action="/retBook"
-									method="POST"
-									class="reqMod"
-								>
+								<form action="/retBook" method="POST" class="reqMod">
 									<input
 										type="hidden"
 										name="reqID"
@@ -133,30 +142,26 @@
 				</div>
 			</div>
 		</div>
-		<form action="/client/books" method="GET">
-			<input type="hidden" name="username" value="<%= username %>" />
-			<button type="submit" class="btn-primary btn m-lg-5">
-				View Available Books
-			</button>
-		</form>
 		<script src="/sweetalert/sweetalert.min.js"></script>
 		<script>
-			console.log("i")
-			document
-				.getElementsByClassName("requestMod")
-				.addEventListener("click", function (event) {
-					event.preventDefault(); 
-					swal({
-						title: "Confirm Book Issue",
-						text: "Are you sure you want to make/delete request?",
-						icon: "warning",
-						buttons: ["Cancel", "Yes"],
-					}).then((yes) => {
-						if (yes) {
-							document.getElementById("reqMod").submit();
-						}
+			document.addEventListener("DOMContentLoaded", function () {
+				var requestButtons = document.getElementsByClassName("requestMod");
+				Array.from(requestButtons).forEach(function (button) {
+					button.addEventListener("click", function (event) {
+						event.preventDefault();
+						swal({
+							title: "Confirm Book Issue",
+							text: "Are you sure you want to make/delete the request?",
+							icon: "warning",
+							buttons: ["Cancel", "Yes"],
+						}).then((yes) => {
+							if (yes) {
+								button.parentNode.submit();
+							}
+						});
 					});
 				});
+			});
 		</script>
 	</body>
 </html>

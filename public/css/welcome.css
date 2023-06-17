@@ -1,0 +1,24 @@
+.container {
+	display: flex; 
+    flex-direction: column;
+	justify-content: center;
+	align-items: center; 
+	height: 200px; 
+}
+
+#gonext {
+	/* Define button styles */
+	padding: 10px 20px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+	.container {
+		flex-direction: column; /* Stack items vertically */
+		height: auto; /* Remove fixed height */
+	}
+
+	#gonext {
+		margin-top: 10px; /* Add space between button and container */
+	}
+}
